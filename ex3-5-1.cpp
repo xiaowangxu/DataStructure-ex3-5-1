@@ -8,21 +8,139 @@
 
 #include "HashList.h"
 #include <iostream>
+#include <string>
+#include <fstream>
 using namespace TwiceCheckHashList;
 
-int HashFunc(char& Data)
+int HashFunction(string &Data)
 {
-    return Data % 100;
+	int ans = 0;
+	for (int i = Data.length() - 1; i >= 0; i--)
+	{
+		char item = Data[i];
+		ans = (ans + item) % 23;
+	}
+
+	return ans;
 }
 
 int main()
 {
-    HashList<char> test(100, HashFunc);
-    std::cout << OK << std::endl;
-    int pos = 0;
-    char a = 'a';
-    int res = test.search(a, pos);
-    std::cout << res << std::endl;
+	fstream test_file;
+	test_file.open("test.txt", std::ios::in);
+
+	HashList<string> hash_table(23, HashFunction);
+
+	int test_case = 0;
+	int item_count = 0;
+
+	while (test_file >> item_count)
+	{
+		system("CLS");
+		test_case++;
+
+		cout << "Case " << test_case << " :" << endl;
+		cout << "\nInsert Test\n"
+			 << endl;
+		for (int i = 0; i < item_count; i++)
+		{
+			string item;
+			test_file >> item;
+			hash_table.insert(item);
+		}
+		hash_table.print();
+		cout << endl;
+		system("PAUSE");
+		system("CLS");
+
+		cout << "In Case " << test_case << " :" << endl;
+		cout << "\n1. Insert" << endl
+			 << "2. Search" << endl
+			 << "3. Delete\n"
+			 << "4. Show\n"
+			 << endl
+			 << "Enter ActionCode : ";
+		int action_code = 0;
+		string item;
+		while (cin >> action_code)
+		{
+			if (action_code <= 0 || action_code > 4)
+			{
+				break;
+			}
+			int i = 0;
+			switch (action_code)
+			{
+			case 1:
+				system("CLS");
+				cout << "In Case " << test_case << " :" << endl;
+				cout << "\n1. Insert\n"
+					 << endl;
+				cout << "Enter Item to Insert : ";
+				cin >> item;
+				hash_table.insert(item);
+				cout << endl;
+				hash_table.print();
+				break;
+			case 2:
+				system("CLS");
+				cout << "In Case " << test_case << " :" << endl;
+				cout << "\n2. Search\n"
+					 << endl;
+				cout << "Enter Item to Search : ";
+				cin >> item;
+				
+				if (hash_table.search(item, i) == FOUND)
+				{
+					cout << endl;
+					cout << "Found !!\n";
+				}
+				else
+				{
+					cout << endl;
+					cout << "Not Found\n";
+				}
+				cout << endl;
+				hash_table.print();
+				break;
+			case 3:
+				system("CLS");
+				cout << "In Case " << test_case << " :" << endl;
+				cout << "\n3. Delete\n"
+					 << endl;
+				cout << "Enter Item to Delete : ";
+				cin >> item;
+				hash_table.remove(item);
+				cout << endl;
+				hash_table.print();
+				break;
+			case 4:
+				system("CLS");
+				cout << "Case " << test_case << " :" << endl;
+				cout << endl;
+				hash_table.print();
+				break;
+			default:
+				break;
+			}
+			cout << endl;
+			system("PAUSE");
+			system("CLS");
+			cout << "In Case " << test_case << " :" << endl;
+			cout << "\n1. Insert" << endl
+				 << "2. Search" << endl
+				 << "3. Delete\n"
+				 << endl
+				 << "Enter ActionCode : ";
+		}
+	}
+
+	test_file.close();
+	system("CLS");
+	cout << "End of Test\n\n";
+	system("PAUSE");
+	system("CLS");
+	return 0;
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
